@@ -2,8 +2,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 
-import com.sun.tools.javac.code.Attribute.Array;
-
 class Handler implements URLHandler {
     // The one bit of state on the server: a number that will be manipulated by
     // various requests.
@@ -15,11 +13,13 @@ class Handler implements URLHandler {
         } else if (url.getPath().equals("/search")) {
             String[] parameters = url.getQuery().split("=");
                 if (parameters[0].equals("s")) {
+                    ArrayList<String> substrings = new ArrayList<String>();
                     for (String str:strings){
-                        if (str.contains(parameters[1])){
-                            System.out.println(str);
-                        }
+                        if (str.contains(parameters[1].toString())){
+                            substrings.add(str);
+                        }  
                     }
+                    return substrings.toString();
                 }
         } else if (url.getPath().equals("/add")) {
             String[] parameters = url.getQuery().split("=");
@@ -30,10 +30,11 @@ class Handler implements URLHandler {
         } else {
             return "404 Not Found!";
         }
+        return null;
     }
 }
 
-class NumberServer {
+class SearchEngine {
     public static void main(String[] args) throws IOException {
         if(args.length == 0){
             System.out.println("Missing port number! Try any number between 1024 to 49151");
